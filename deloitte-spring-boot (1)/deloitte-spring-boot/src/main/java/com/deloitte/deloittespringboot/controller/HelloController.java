@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.deloitte.deloittespringboot.model.Product;
 import com.deloitte.deloittespringboot.service.ProductService;
+import com.deloitte.deloittespringboot.util.ProductNotFoundException;
 
 @RestController
 public class HelloController {
@@ -60,18 +61,33 @@ public class HelloController {
 	public List<Product> findProductInRange(@PathVariable("from") float fromRange,@PathVariable("to") float toRange){
 	   return service.findProductsInRange(fromRange, toRange);
     }
+//	
+//	@DeleteMapping("/products/{pid}")
+//	public ResponseEntity<Product> deleteProduct(@PathVariable int pid){
+//		ResponseEntity<Product> deletedProduct;   
+//		if(service.checkIfExist(pid)) { 
+//		service.deleteProductById(pid);
+//	    deletedProduct=new ResponseEntity<Product> (HttpStatus.OK);
+//		
+//		}
+//		else
+//			deletedProduct=new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+//		
+//		return deletedProduct;
+//	
+//	}
 	
+
 	@DeleteMapping("/products/{pid}")
 	public ResponseEntity<Product> deleteProduct(@PathVariable int pid){
 		ResponseEntity<Product> deletedProduct;   
-		if(service.checkIfExist(pid)) { 
-		service.deleteProductById(pid);
-	    deletedProduct=new ResponseEntity<Product> (HttpStatus.OK);
+		if(!service.checkIfExist(pid)) { 
+		throw new ProductNotFoundException("pid : "+pid);
 		
 		}
-		else
-			deletedProduct=new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
 		
+		service.deleteProductById(pid);
+	    deletedProduct=new ResponseEntity<Product> (HttpStatus.OK);
 		return deletedProduct;
 	
 	}

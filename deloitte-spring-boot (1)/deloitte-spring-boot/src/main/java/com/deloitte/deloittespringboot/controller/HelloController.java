@@ -77,7 +77,7 @@ public class HelloController {
 //	
 //	}
 	
-
+   
 	@DeleteMapping("/products/{pid}")
 	public ResponseEntity<Product> deleteProduct(@PathVariable int pid){
 		ResponseEntity<Product> deletedProduct;   
